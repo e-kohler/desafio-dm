@@ -41,7 +41,7 @@ async function fetchGifs(recipes) {
   const promises = recipes.map(recipe => axios.get(`${process.env.GIPHY_URL}/gifs/search`, {
     params:{
       api_key: process.env.GIPHY_API_KEY,
-      q: recipe.title,
+      q: recipe.title.trim().replace('\n', ''),
       limit: 1
     }
   }))
@@ -53,9 +53,9 @@ async function fetchGifs(recipes) {
 function formatData(recipes, gifs) {
   return recipes.map((recipe, index) => {
     const gifUrl = gifs[index].url
-    const ingredients = recipe.ingredients.split(',').sort()
+    const ingredients = recipe.ingredients.split(',').map(i => i.trim()).sort()
     return {
-      title: recipe.title,
+      title: recipe.title.trim().replace('\n', ''),
       ingredients,
       link: recipe.href,
       gif: gifUrl
