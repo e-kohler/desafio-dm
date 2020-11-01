@@ -2,6 +2,7 @@ import axios from 'axios'
 
 export async function get(req, res) {
   const query = req.query.i || ''
+  const page = req.query.p || 1
   const keywords = query.split(',')
   if (keywords.length > 3) {
     res.status(400)
@@ -10,7 +11,7 @@ export async function get(req, res) {
   let recipes;
   let gifs;
   try {
-    recipes = await fetchRecipes(query)
+    recipes = await fetchRecipes(query, page)
     gifs = await fetchGifs(recipes)
   } catch (err) {
     return res.json({
@@ -26,10 +27,11 @@ export async function get(req, res) {
   })
 }
 
-async function fetchRecipes(query) {
+async function fetchRecipes(query, page) {
   const response = await axios.get(process.env.RECIPE_PUPPY_URL, {
     params: {
-      i: query
+      i: query,
+      p: page
     }
   })
   return response.data.results
