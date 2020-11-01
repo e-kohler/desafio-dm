@@ -14,10 +14,11 @@ export async function get(req, res) {
     recipes = await fetchRecipes(query, page)
     gifs = await fetchGifs(recipes)
   } catch (err) {
+    res.status(err.response.status)
     return res.json({
-      status: 500,
-      message: 'Falha ao capturar dados',
-      err: err.message
+      error: err.message,
+      status: err.response.status,
+      path: err.request.path
     })
   }
   const formattedData = formatData(recipes, gifs)
