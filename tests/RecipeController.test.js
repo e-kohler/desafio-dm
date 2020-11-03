@@ -98,28 +98,28 @@ describe('\n Testes RecipeController \n', () => {
       const query = ''
       const data = await RecipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail')
+      data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 1', async () => {
       const query = 'chocolate'
       const data = await RecipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail')
+      data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 2', async () => {
       const query = 'chocolate,flour'
       const data = await RecipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail')
+      data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 3', async () => {
       const query = 'chocolate,flour,butter'
       const data = await RecipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail')
+      data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
   })
 
@@ -138,7 +138,7 @@ describe('\n Testes RecipeController \n', () => {
       const data = await RecipeController.fetchGifs([mockData])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
-      expect(data[0]).to.be.an('object').that.includes.key('url')
+      data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
     })
 
     it('Number of recipes: 2', async () => {
@@ -147,7 +147,7 @@ describe('\n Testes RecipeController \n', () => {
       const data = await RecipeController.fetchGifs(mockData)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
-      expect(data[0]).to.be.an('object').that.includes.key('url')
+      data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
     })
   })
 
@@ -165,14 +165,14 @@ describe('\n Testes RecipeController \n', () => {
       const data = await RecipeController.formatData([mockRecipe], [mockGif])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+      data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
     })
 
     it('Number of recipes and gifs: 2', async () => {
       const data = await RecipeController.formatData(mockRecipes, mockGifs)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
-      expect(data[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+      data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
     })
   })
 
