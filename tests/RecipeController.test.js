@@ -1,4 +1,5 @@
 import chai from 'chai'
+import chaiSorted from 'chai-sorted'
 import chaiHttp from 'chai-http'
 import dotenv from 'dotenv'
 import app from '../src/server.js'
@@ -6,6 +7,7 @@ import * as RecipeController from '../src/controllers/RecipeController.js'
 dotenv.config()
 
 chai.use(chaiHttp)
+chai.use(chaiSorted)
 const { expect } = chai
 
 const mockRecipes = [
@@ -184,7 +186,8 @@ describe('\n Testes RecipeController \n', () => {
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(1)
           expect(res.body.recipes).to.be.an('array')
-          expect(res.body.recipes[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
+          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
           done()
         })
     })
@@ -199,7 +202,8 @@ describe('\n Testes RecipeController \n', () => {
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(1)
           expect(res.body.recipes).to.be.an('array')
-          expect(res.body.recipes[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
+          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
           done()
         })
     })
@@ -214,7 +218,8 @@ describe('\n Testes RecipeController \n', () => {
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(2)
           expect(res.body.recipes).to.be.an('array')
-          expect(res.body.recipes[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
+          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
           done()
         })
     })
@@ -229,7 +234,8 @@ describe('\n Testes RecipeController \n', () => {
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(3)
           expect(res.body.recipes).to.be.an('array')
-          expect(res.body.recipes[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
+          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
+          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
           done()
         })
     })
