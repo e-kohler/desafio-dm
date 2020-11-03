@@ -1,12 +1,9 @@
 import chai from 'chai'
 import chaiSorted from 'chai-sorted'
-import chaiHttp from 'chai-http'
 import dotenv from 'dotenv'
-import app from '../src/server.js'
-import * as RecipeController from '../src/controllers/RecipeController.js'
+import * as recipeController from '../../src/controllers/recipe.js'
 dotenv.config()
 
-chai.use(chaiHttp)
 chai.use(chaiSorted)
 const { expect } = chai
 
@@ -92,32 +89,32 @@ const mockGifs = [
   }
 ]
 
-describe('\n Testes RecipeController \n', () => {
+describe('\n Testes unitários \n', () => {
   describe('Método fetchRecipes', () => {
     it('Query size: 0', async () => {
       const query = ''
-      const data = await RecipeController.fetchRecipes(query, 1)
+      const data = await recipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 1', async () => {
       const query = 'chocolate'
-      const data = await RecipeController.fetchRecipes(query, 1)
+      const data = await recipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 2', async () => {
       const query = 'chocolate,flour'
-      const data = await RecipeController.fetchRecipes(query, 1)
+      const data = await recipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 3', async () => {
       const query = 'chocolate,flour,butter'
-      const data = await RecipeController.fetchRecipes(query, 1)
+      const data = await recipeController.fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
@@ -127,7 +124,7 @@ describe('\n Testes RecipeController \n', () => {
     it('Number of recipes: 0', async () => {
       const mockData = []
 
-      const data = await RecipeController.fetchGifs(mockData)
+      const data = await recipeController.fetchGifs(mockData)
       expect(data).to.be.an('array')
       expect(data).to.have.length(0)
     })
@@ -135,7 +132,7 @@ describe('\n Testes RecipeController \n', () => {
     it('Number of recipes: 1', async () => {
       const mockData = mockRecipes[0]
 
-      const data = await RecipeController.fetchGifs([mockData])
+      const data = await recipeController.fetchGifs([mockData])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
       data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
@@ -144,7 +141,7 @@ describe('\n Testes RecipeController \n', () => {
     it('Number of recipes: 2', async () => {
       const mockData = mockRecipes
 
-      const data = await RecipeController.fetchGifs(mockData)
+      const data = await recipeController.fetchGifs(mockData)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
       data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
@@ -153,7 +150,7 @@ describe('\n Testes RecipeController \n', () => {
 
   describe('Método formatData', () => {
     it('Number of recipes and gifs: 0', async () => {
-      const data = await RecipeController.formatData([], [])
+      const data = await recipeController.formatData([], [])
       expect(data).to.be.an('array')
       expect(data).to.have.length(0)
     })
@@ -162,92 +159,17 @@ describe('\n Testes RecipeController \n', () => {
       const mockRecipe = mockRecipes[0]
       const mockGif = mockGifs[0]
 
-      const data = await RecipeController.formatData([mockRecipe], [mockGif])
+      const data = await recipeController.formatData([mockRecipe], [mockGif])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
       data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
     })
 
     it('Number of recipes and gifs: 2', async () => {
-      const data = await RecipeController.formatData(mockRecipes, mockGifs)
+      const data = await recipeController.formatData(mockRecipes, mockGifs)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
       data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
-    })
-  })
-
-  describe('Método get', () => {
-    it('Query size: 0', done => {
-      chai.request(app)
-        .get('/recipes')
-        .end((_, res) => {
-          expect(res).to.have.status(200)
-          expect(res.body).to.be.an('object')
-          expect(res.body.keywords).to.be.an('array')
-          expect(res.body.keywords).to.have.length(1)
-          expect(res.body.recipes).to.be.an('array')
-          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
-          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
-          done()
-        })
-    })
-
-    it('Query size: 1', done => {
-      chai.request(app)
-        .get('/recipes')
-        .query({ i: 'butter' })
-        .end((_, res) => {
-          expect(res).to.have.status(200)
-          expect(res.body).to.be.an('object')
-          expect(res.body.keywords).to.be.an('array')
-          expect(res.body.keywords).to.have.length(1)
-          expect(res.body.recipes).to.be.an('array')
-          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
-          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
-          done()
-        })
-    })
-
-    it('Query size: 2', done => {
-      chai.request(app)
-        .get('/recipes')
-        .query({ i: 'butter,tomato' })
-        .end((_, res) => {
-          expect(res).to.have.status(200)
-          expect(res.body).to.be.an('object')
-          expect(res.body.keywords).to.be.an('array')
-          expect(res.body.keywords).to.have.length(2)
-          expect(res.body.recipes).to.be.an('array')
-          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
-          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
-          done()
-        })
-    })
-
-    it('Query size: 3', done => {
-      chai.request(app)
-        .get('/recipes')
-        .query({ i: 'butter,tomato,oregano' })
-        .end((_, res) => {
-          expect(res).to.have.status(200)
-          expect(res.body).to.be.an('object')
-          expect(res.body.keywords).to.be.an('array')
-          expect(res.body.keywords).to.have.length(3)
-          expect(res.body.recipes).to.be.an('array')
-          res.body.recipes.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
-          res.body.recipes.forEach(recipe => expect(recipe.ingredients).to.be.sorted())
-          done()
-        })
-    })
-
-    it('Query size: 4', done => {
-      chai.request(app)
-        .get('/recipes')
-        .query({ i: 'butter,tomato,oregano,cheese' })
-        .end((_, res) => {
-          expect(res).to.have.status(400)
-          done()
-        })
     })
   })
 })
