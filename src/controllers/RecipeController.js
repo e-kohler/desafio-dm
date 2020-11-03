@@ -6,7 +6,10 @@ export async function get (req, res) {
   const keywords = query.split(',')
   if (keywords.length > 3) {
     res.status(400)
-    return res.send('Maximum number of ingredients is 3')
+    return res.json({
+      error: 'Maximum number of ingredients is 3',
+      status: 400,
+    })
   }
   let recipes
   let gifs
