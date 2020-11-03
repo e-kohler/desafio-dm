@@ -9,8 +9,8 @@ chai.use(chaiHttp)
 chai.use(chaiSorted)
 const { expect } = chai
 
-describe('\n Testes de Integração \n', () => {
-  describe('Método get', () => {
+describe('\n Integration tests \n', () => {
+  describe('get', () => {
     it('Query size: 0', done => {
       chai.request(app)
         .get('/recipes')

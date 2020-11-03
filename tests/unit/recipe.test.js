@@ -1,7 +1,11 @@
 import chai from 'chai'
 import chaiSorted from 'chai-sorted'
 import dotenv from 'dotenv'
-import * as recipeController from '../../src/controllers/recipe.js'
+
+import { fetchRecipes } from '../../src/services/recipePuppy.js'
+import { fetchGifs } from '../../src/services/giphy.js'
+import { formatData } from '../../src/controllers/recipe.js'
+
 dotenv.config()
 
 chai.use(chaiSorted)
@@ -89,42 +93,42 @@ const mockGifs = [
   }
 ]
 
-describe('\n Testes unitários \n', () => {
-  describe('Método fetchRecipes', () => {
+describe('\n Unit tests \n', () => {
+  describe('fetchRecipes', () => {
     it('Query size: 0', async () => {
       const query = ''
-      const data = await recipeController.fetchRecipes(query, 1)
+      const data = await fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 1', async () => {
       const query = 'chocolate'
-      const data = await recipeController.fetchRecipes(query, 1)
+      const data = await fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 2', async () => {
       const query = 'chocolate,flour'
-      const data = await recipeController.fetchRecipes(query, 1)
+      const data = await fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
 
     it('Query size: 3', async () => {
       const query = 'chocolate,flour,butter'
-      const data = await recipeController.fetchRecipes(query, 1)
+      const data = await fetchRecipes(query, 1)
       expect(data).to.be.an('array')
       data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
     })
   })
 
-  describe('Método fetchGifs', () => {
+  describe('fetchGifs', () => {
     it('Number of recipes: 0', async () => {
       const mockData = []
 
-      const data = await recipeController.fetchGifs(mockData)
+      const data = await fetchGifs(mockData)
       expect(data).to.be.an('array')
       expect(data).to.have.length(0)
     })
@@ -132,7 +136,7 @@ describe('\n Testes unitários \n', () => {
     it('Number of recipes: 1', async () => {
       const mockData = mockRecipes[0]
 
-      const data = await recipeController.fetchGifs([mockData])
+      const data = await fetchGifs([mockData])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
       data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
@@ -141,16 +145,16 @@ describe('\n Testes unitários \n', () => {
     it('Number of recipes: 2', async () => {
       const mockData = mockRecipes
 
-      const data = await recipeController.fetchGifs(mockData)
+      const data = await fetchGifs(mockData)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
       data.forEach(gif => expect(gif).to.be.an('object').that.includes.key('url'))
     })
   })
 
-  describe('Método formatData', () => {
+  describe('formatData', () => {
     it('Number of recipes and gifs: 0', async () => {
-      const data = await recipeController.formatData([], [])
+      const data = await formatData([], [])
       expect(data).to.be.an('array')
       expect(data).to.have.length(0)
     })
@@ -159,14 +163,14 @@ describe('\n Testes unitários \n', () => {
       const mockRecipe = mockRecipes[0]
       const mockGif = mockGifs[0]
 
-      const data = await recipeController.formatData([mockRecipe], [mockGif])
+      const data = await formatData([mockRecipe], [mockGif])
       expect(data).to.be.an('array')
       expect(data).to.have.length(1)
       data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))
     })
 
     it('Number of recipes and gifs: 2', async () => {
-      const data = await recipeController.formatData(mockRecipes, mockGifs)
+      const data = await formatData(mockRecipes, mockGifs)
       expect(data).to.be.an('array')
       expect(data).to.have.length(2)
       data.forEach(formattedData => expect(formattedData).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif'))

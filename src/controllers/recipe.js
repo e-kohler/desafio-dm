@@ -1,57 +1,33 @@
-import axios from 'axios'
+import { handleError } from '../handlers/errorHandler.js'
+
+import { fetchRecipes } from '../services/recipePuppy.js'
+import { fetchGifs } from '../services/giphy.js'
+
+import { sanitizeString } from '../utils/utils.js'
 
 export async function get (req, res) {
   const query = req.query.i || ''
   const page = req.query.p || 1
   const keywords = query.split(',')
-  if (keywords.length > 3) {
-    res.status(400)
-    return res.json({
-      error: 'Maximum number of ingredients is 3',
-      status: 400,
-    })
+
+  const inputIsInvalid = checkInvalidInput(keywords)
+  if (inputIsInvalid) {
+    return handleError(res, inputIsInvalid)
   }
-  let recipes
-  let gifs
-  try {
-    recipes = await fetchRecipes(query, page)
-    gifs = await fetchGifs(recipes)
-  } catch (err) {
-    res.status(err.response.status)
-    return res.json({
-      error: err.message,
-      status: err.response.status,
-      path: err.request.path
-    })
+
+  const recipesResponse = await fetchRecipes(query, page)
+  if (recipesResponse.status === 500) {
+    return handleError(res, recipesResponse)
   }
-  const formattedData = formatData(recipes, gifs)
+  const gifsResponse = await fetchGifs(recipesResponse)
+  if (gifsResponse.status === 500) {
+    return handleError(res, gifsResponse)
+  }
+  const formattedData = formatData(recipesResponse, gifsResponse)
   return res.json({
     keywords,
     recipes: formattedData
   })
-}
-
-export async function fetchRecipes (query, page) {
-  const response = await axios.get(process.env.RECIPE_PUPPY_URL, {
-    params: {
-      i: query,
-      p: page
-    }
-  })
-  return response.data.results
-}
-
-export async function fetchGifs (recipes) {
-  const promises = recipes.map(recipe => axios.get(`${process.env.GIPHY_URL}/gifs/search`, {
-    params: {
-      api_key: process.env.GIPHY_API_KEY,
-      q: recipe.title.trim().replace('\n', ''),
-      limit: 1
-    }
-  }))
-  const responses = await Promise.all(promises)
-  const gifs = responses.map(response => response.data.data[0])
-  return gifs
 }
 
 export function formatData (recipes, gifs) {
@@ -59,10 +35,26 @@ export function formatData (recipes, gifs) {
     const gifUrl = (gifs[index] && gifs[index].url) || ''
     const ingredients = recipe.ingredients.split(',').map(i => i.trim()).sort()
     return {
-      title: recipe.title.trim().replace('\n', ''),
+      title: sanitizeString(recipe.title),
       ingredients,
       link: recipe.href,
       gif: gifUrl
     }
   })
+}
+
+function checkInvalidInput(input) {
+  if (input.length === 0) {
+    return {
+      status: 400,
+      message: "You must enter at least 1 ingredient"
+    }
+  } else if (input.length > 3) {
+    return {
+      status: 400,
+      message: "Maximum number of ingredients is 3"
+    }
+  } else {
+    return false
+  }
 }
