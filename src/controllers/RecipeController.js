@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export async function get(req, res) {
+export async function get (req, res) {
   const query = req.query.i || ''
   const page = req.query.p || 1
   const keywords = query.split(',')
@@ -8,8 +8,8 @@ export async function get(req, res) {
     res.status(400)
     return res.send('Maximum number of ingredients is 3')
   }
-  let recipes;
-  let gifs;
+  let recipes
+  let gifs
   try {
     recipes = await fetchRecipes(query, page)
     gifs = await fetchGifs(recipes)
@@ -28,7 +28,7 @@ export async function get(req, res) {
   })
 }
 
-export async function fetchRecipes(query, page) {
+export async function fetchRecipes (query, page) {
   const response = await axios.get(process.env.RECIPE_PUPPY_URL, {
     params: {
       i: query,
@@ -38,9 +38,9 @@ export async function fetchRecipes(query, page) {
   return response.data.results
 }
 
-export async function fetchGifs(recipes) {
+export async function fetchGifs (recipes) {
   const promises = recipes.map(recipe => axios.get(`${process.env.GIPHY_URL}/gifs/search`, {
-    params:{
+    params: {
       api_key: process.env.GIPHY_API_KEY,
       q: recipe.title.trim().replace('\n', ''),
       limit: 1
@@ -51,7 +51,7 @@ export async function fetchGifs(recipes) {
   return gifs
 }
 
-export function formatData(recipes, gifs) {
+export function formatData (recipes, gifs) {
   return recipes.map((recipe, index) => {
     const gifUrl = (gifs[index] && gifs[index].url) || ''
     const ingredients = recipe.ingredients.split(',').map(i => i.trim()).sort()

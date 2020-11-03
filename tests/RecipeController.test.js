@@ -1,10 +1,9 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import dotenv from 'dotenv'
-dotenv.config()
-
 import app from '../src/server.js'
 import * as RecipeController from '../src/controllers/RecipeController.js'
+dotenv.config()
 
 chai.use(chaiHttp)
 const { expect } = chai
@@ -179,8 +178,8 @@ describe('\n Testes RecipeController \n', () => {
     it('Query size: 0', done => {
       chai.request(app)
         .get('/recipes')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
+        .end((_, res) => {
+          expect(res).to.have.status(200)
           expect(res.body).to.be.an('object')
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(1)
@@ -188,14 +187,14 @@ describe('\n Testes RecipeController \n', () => {
           expect(res.body.recipes[0]).to.be.an('object').that.has.all.keys('title', 'ingredients', 'link', 'gif')
           done()
         })
-      })
+    })
 
     it('Query size: 1', done => {
       chai.request(app)
         .get('/recipes')
         .query({ i: 'butter' })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
+        .end((_, res) => {
+          expect(res).to.have.status(200)
           expect(res.body).to.be.an('object')
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(1)
@@ -209,8 +208,8 @@ describe('\n Testes RecipeController \n', () => {
       chai.request(app)
         .get('/recipes')
         .query({ i: 'butter,tomato' })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
+        .end((_, res) => {
+          expect(res).to.have.status(200)
           expect(res.body).to.be.an('object')
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(2)
@@ -224,8 +223,8 @@ describe('\n Testes RecipeController \n', () => {
       chai.request(app)
         .get('/recipes')
         .query({ i: 'butter,tomato,oregano' })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
+        .end((_, res) => {
+          expect(res).to.have.status(200)
           expect(res.body).to.be.an('object')
           expect(res.body.keywords).to.be.an('array')
           expect(res.body.keywords).to.have.length(3)
@@ -239,8 +238,8 @@ describe('\n Testes RecipeController \n', () => {
       chai.request(app)
         .get('/recipes')
         .query({ i: 'butter,tomato,oregano,cheese' })
-        .end((err, res) => {
-          expect(res).to.have.status(400);
+        .end((_, res) => {
+          expect(res).to.have.status(400)
           done()
         })
     })
