@@ -1,5 +1,5 @@
 import express from 'express'
-import * as RecipeController from './controllers/RecipeController.mjs'
+import * as RecipeController from './controllers/RecipeController.js'
 
 const router = express.Router()
 

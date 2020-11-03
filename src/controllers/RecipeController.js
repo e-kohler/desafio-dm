@@ -28,7 +28,7 @@ export async function get(req, res) {
   })
 }
 
-async function fetchRecipes(query, page) {
+export async function fetchRecipes(query, page) {
   const response = await axios.get(process.env.RECIPE_PUPPY_URL, {
     params: {
       i: query,
@@ -38,7 +38,7 @@ async function fetchRecipes(query, page) {
   return response.data.results
 }
 
-async function fetchGifs(recipes) {
+export async function fetchGifs(recipes) {
   const promises = recipes.map(recipe => axios.get(`${process.env.GIPHY_URL}/gifs/search`, {
     params:{
       api_key: process.env.GIPHY_API_KEY,
@@ -51,9 +51,9 @@ async function fetchGifs(recipes) {
   return gifs
 }
 
-function formatData(recipes, gifs) {
+export function formatData(recipes, gifs) {
   return recipes.map((recipe, index) => {
-    const gifUrl = gifs[index].url
+    const gifUrl = (gifs[index] && gifs[index].url) || ''
     const ingredients = recipe.ingredients.split(',').map(i => i.trim()).sort()
     return {
       title: recipe.title.trim().replace('\n', ''),
