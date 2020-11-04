@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-import { sanitizeString } from '../utils/utils.js'
-
 export async function fetchGifs (titles) {
   const GIPHY_URL = process.env.GIPHY_URL
   const GIPHY_API_KEY = process.env.GIPHY_API_KEY
