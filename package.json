@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/server.js",
-    "test": "mocha ./tests/unit/*.test.js ./tests/integration/*.test.js --exit",
+    "test": "mocha --timeout 10000 ./tests/unit/*.test.js ./tests/integration/*.test.js --exit",
     "lint": "eslint .; exit 0"
   },
   "repository": {

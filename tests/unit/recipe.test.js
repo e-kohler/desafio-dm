@@ -95,13 +95,6 @@ const mockGifs = [
 
 describe('\n Unit tests \n', () => {
   describe('fetchRecipes', () => {
-    it('Query size: 0', async () => {
-      const query = ''
-      const data = await fetchRecipes(query, 1)
-      expect(data).to.be.an('array')
-      data.forEach(recipe => expect(recipe).to.be.an('object').that.has.all.keys('title', 'href', 'ingredients', 'thumbnail'))
-    })
-
     it('Query size: 1', async () => {
       const query = 'chocolate'
       const data = await fetchRecipes(query, 1)
@@ -125,14 +118,6 @@ describe('\n Unit tests \n', () => {
   })
 
   describe('fetchGifs', () => {
-    it('Number of recipes: 0', async () => {
-      const mockData = []
-
-      const data = await fetchGifs(mockData)
-      expect(data).to.be.an('array')
-      expect(data).to.have.length(0)
-    })
-
     it('Number of recipes: 1', async () => {
       const mockData = mockRecipes[0]
 
@@ -153,12 +138,6 @@ describe('\n Unit tests \n', () => {
   })
 
   describe('formatData', () => {
-    it('Number of recipes and gifs: 0', async () => {
-      const data = await formatData([], [])
-      expect(data).to.be.an('array')
-      expect(data).to.have.length(0)
-    })
-
     it('Number of recipes and gifs: 1', async () => {
       const mockRecipe = mockRecipes[0]
       const mockGif = mockGifs[0]
