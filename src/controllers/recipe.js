@@ -44,7 +44,7 @@ export function formatData (recipes, gifs) {
 }
 
 function checkInvalidInput(input) {
-  if (input.length === 0) {
+  if (input.length === 1 && !input[0]) {
     return {
       status: 400,
       message: "You must enter at least 1 ingredient"
