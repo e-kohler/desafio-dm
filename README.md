@@ -25,7 +25,7 @@ respeitando chamadas do tipo:
 http://{host}:{porta_externa}/recipes/?i={ingredient_1},{ingredient_2}
 http://{host}:{porta_externa}/recipes/?i={ingredient_1},{ingredient_2}&p=2
 ```
-Para rodas os testes:
+Para rodar os testes:
 ```
 docker run <nome_de_usuario>/desafio-dm npm run test
 ```
@@ -34,3 +34,9 @@ O arquivo de configuração .env contém os seguintes parâmetros:
  - RECIPE_PUPPY_URL= URL base da API do Recipe Puppy
  - GIPHY_URL= URL base da API do Giphy
  - PORT= Porta pela qual a aplicação é acessada dentro do container
+
+# Decisões
+
+- Optei por utilizar da paginação presente na API do RecipePuppy na minha API também, pois entendi que é uma boa opção para evitar a limitação a uma página de receitas, assim como um retorno muito grande caso retornasse todas as páginas de uma vez.
+
+- Ao utilizar de um Promise.all no acesso à API do Giphy, considerei que o comportamento esperado é: caso alguma requisição apresente erro, a API informa o usuário desse erro, não retornando a lista de receitas. Porém, no caso de um gif específico não existir, o campo "gif" é enviado vazio, e as receitas são retornadas normalmente.
