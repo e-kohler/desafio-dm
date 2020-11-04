@@ -19,7 +19,7 @@ export async function get (req, res) {
   if (recipesResponse.status === 500) {
     return handleError(res, recipesResponse)
   }
-  const gifsResponse = await fetchGifs(recipesResponse)
+  const gifsResponse = await fetchGifs(recipesResponse.map(recipe => sanitizeString(recipe.title)))
   if (gifsResponse.status === 500) {
     return handleError(res, gifsResponse)
   }

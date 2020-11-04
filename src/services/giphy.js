@@ -2,15 +2,15 @@ import axios from 'axios'
 
 import { sanitizeString } from '../utils/utils.js'
 
-export async function fetchGifs (recipes) {
+export async function fetchGifs (titles) {
   const GIPHY_URL = process.env.GIPHY_URL
   const GIPHY_API_KEY = process.env.GIPHY_API_KEY
 
   try {
-    const promises = recipes.map(recipe => axios.get(`${GIPHY_URL}/gifs/search`, {
+    const promises = titles.map(title => axios.get(`${GIPHY_URL}/gifs/search`, {
       params: {
         api_key: GIPHY_API_KEY,
-        q: sanitizeString(recipe.title),
+        q: title,
         limit: 1
       }
     }))
