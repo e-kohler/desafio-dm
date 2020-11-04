@@ -30,10 +30,10 @@ Para rodar os testes:
 docker run <nome_de_usuario>/desafio-dm npm run test
 ```
 O arquivo de configuração .env contém os seguintes parâmetros:
- - GIPHY_API_KEY: Chave necessária para a utilização da API do Giphy
- - RECIPE_PUPPY_URL= URL base da API do Recipe Puppy
- - GIPHY_URL= URL base da API do Giphy
- - PORT= Porta pela qual a aplicação é acessada dentro do container
+ - GIPHY_API_KEY=Chave necessária para a utilização da API do Giphy
+ - RECIPE_PUPPY_URL=URL base da API do Recipe Puppy
+ - GIPHY_URL=URL base da API do Giphy
+ - PORT=Porta pela qual a aplicação é acessada dentro do container. No Dockerfile a porta exposta é a 3333
 
 # Decisões
 
